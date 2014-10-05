@@ -1,0 +1,8 @@
+B11=B[:self.__weight/2+1]
+		B12=B[self.__weight/2+1:]
+		B21=copy.deepcopy(B[:self.__weight/2+1])
+		for col in B21:
+			col[:]=col[B.__height/2+1:]
+		B22=copy.deepcopy(B[self.__weight/2+1:])
+		for col in B22:
+			col[:]=col[B.__height/2+1:]
