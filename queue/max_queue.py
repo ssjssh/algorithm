@@ -17,9 +17,6 @@ class Heap(object):
 		return Heap(*li)
 
 	def __build_heap(self):
-		"""
-		注意：复杂度是n
-		"""
 		for x in reversed(xrange(0,self.length/2)):
 			self.loop_heapify(x)
 
@@ -46,9 +43,8 @@ class Heap(object):
 	
 	def loop_heapify(self,parent):
 		"""
-		复杂度:lgn
 		while true break是一个比较方便的把递归转换成循环的方法，因为在while的时候不用判断任何条件，判断都在break里面，避免了在while
-		中设置复杂的条件。
+		中设置复杂的条件
 		"""
 		while True:
 			largest=parent
@@ -93,6 +89,47 @@ class Heap(object):
 		self.__wide_walk_through(lambda s: content_list.append(str(s)))
 		return '\t'.join(content_list)
 
+	def __len__(self):
+		return self.length
+
+	def __getitem__(self,index):
+		return self.__array[index]
+
+	def append(self,value):
+		self.__array.append(value)
+		insert_index=self.length
+		while True:
+			parent=(insert_index-1)/2
+			#这儿需要判断使得parent不会越界
+			if parent>=0 and self.__array[insert_index]>self.__array[parent]:
+				self.__array[parent],self.__array[insert_index]=self.__array[insert_index],self.__array[parent]
+				insert_index=parent
+			else:
+				break
+		self.length+=1
+
+	def append_with_one_assign(self,value):
+		"""
+		添加了一项优化，就是在移动节点的时候不要交换值，而是仅仅移动父节点，在最后空出来的节点上面插入值.
+		这样的好处是仅需要赋值一次。减低了算法中的常数项。
+		"""
+		self.__array.append(value)
+		insert_index=self.length
+		while True:
+			parent=(insert_index-1)/2
+			#这儿需要判断使得parent不会越界
+			if parent>=0 and value>self.__array[parent]:
+				self.__array[insert_index]=self.__array[parent]
+				insert_index=parent
+			else:
+				break
+		self.__array[insert_index]=value
+		self.length+=1
+
+
+	def __setitem__(self,index,value):
+		self.__array[index]=value
+
 	def __copy__(self):
 		newone = type(self)(*self.__array)
   		newone.__dict__.update(self.__dict__)
@@ -105,12 +142,93 @@ class Heap(object):
   			newone.__dict__[x]=copy.deepcopy(self.__dict__[x])
   		return newone
 
+  	@classmethod
+ 	def heap_sort(cls,list):
+ 		new_heap=Heap(*list)
+ 		result=new_heap.__array
+ 		i=len(result)-1
+ 		while True:
+ 			result[0],result[i]=result[i],result[0]
+ 			new_heap.length-=1
+ 			i-=1
+ 			if i is 2:
+ 				break
+ 			new_heap.loop_heapify(0)
+ 		return result
+
+ 	def pop(self,index=-1):
+ 		node=self.__array.pop(index)
+ 		self.length-=1
+ 		"""这里也可以使用比较复杂的逻辑支持移动一个元素(O(lgn))，但是调用这个方法比较方便
+ 		复杂度:O(n)
+ 		"""
+ 		self.__build_heap()
+		return node
+
+	def pop_max(self):
+		"""
+		这个方法仅仅支持pop首元素，因此可以直接调用loop_heapify。上面的不可以
+		复杂度:O(lgn)
+		"""
+		max_node=self.__array[0]
+		self.length-=1
+		self.__array[0]=self.__array.pop()
+		self.loop_heapify(0)
+		return max_node
+
+
+class MaxQueue(object):
+	"""使用堆实现最大优先堆"""
+	class Node(object):
+		"""优先队列里面的节点"""
+		def __init__(self, key,obj):
+			super(MaxQueue.Node, self).__init__()
+			self.key = key
+			self.obj=obj
+
+		def __str__(self):
+			return "".join(["Key: ",str(self.key),"\tObject:",str(self.obj)])
+
+		def __cmp__(self,other):
+			if self.key<other.key:
+				return -1
+			elif self.key>other.key:
+				return 1
+			else:
+				return 0
+			
+	def __init__(self, kargs):
+		super(MaxQueue, self).__init__()
+		values=[MaxQueue.Node(kargs[obj],obj) for obj in kargs]
+		self.__heap=Heap(*values)
+		self.length=self.__heap.length
+
+	def max(self):
+		return self.__heap[0].obj
+
+	def pop_max(self):
+		if self.length<1:
+			return None
+		self.length-=1
+		return self.__heap.pop_max()
+
+	def __setitem__(self,key,value):
+		node=MaxQueue.Node(key,value)
+		self.__heap.append_with_one_assign(node)
+
+
+	def __str__(self):
+		return str(self.__heap)
+
 
 def main():
-	heap=Heap(16,4,10,14,7,9,3,2,8,1)
-	print heap
-	new_heap=copy.copy(heap)
-	print new_heap
+	queue=MaxQueue({16:16,4:4,10:10,14:14,7:7,9:9,3:3,2:2,8:8,1:1})
+	print queue
+	print queue.pop_max()
+	print queue
+	queue[16]=16
+	print queue
+
 		
 if __name__ == '__main__':
-	main()
+	main()			

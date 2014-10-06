@@ -17,9 +17,6 @@ class Heap(object):
 		return Heap(*li)
 
 	def __build_heap(self):
-		"""
-		注意：复杂度是n
-		"""
 		for x in reversed(xrange(0,self.length/2)):
 			self.loop_heapify(x)
 
@@ -46,9 +43,8 @@ class Heap(object):
 	
 	def loop_heapify(self,parent):
 		"""
-		复杂度:lgn
 		while true break是一个比较方便的把递归转换成循环的方法，因为在while的时候不用判断任何条件，判断都在break里面，避免了在while
-		中设置复杂的条件。
+		中设置复杂的条件
 		"""
 		while True:
 			largest=parent
@@ -106,11 +102,26 @@ class Heap(object):
   		return newone
 
 
+  	@classmethod
+ 	def heap_sort(cls,list):
+ 		"""
+ 		复杂度:O(nlgn)，调用了n次loop_heapify(O(lgn))
+ 		"""
+ 		new_heap=Heap(*list)
+ 		result=new_heap.__array
+ 		i=len(result)-1
+ 		while True:
+ 			result[0],result[i]=result[i],result[0]
+ 			new_heap.length-=1
+ 			i-=1
+ 			if i is 2:
+ 				break
+ 			new_heap.loop_heapify(0)
+ 		return result
+
+
 def main():
-	heap=Heap(16,4,10,14,7,9,3,2,8,1)
-	print heap
-	new_heap=copy.copy(heap)
-	print new_heap
+	print Heap.heap_sort([16,4,10,14,7,9,3,2,8,1])
 		
 if __name__ == '__main__':
 	main()
