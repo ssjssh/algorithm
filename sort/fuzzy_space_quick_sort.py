@@ -39,10 +39,9 @@ def partition(li,start,end):
 	if li_len<2:
 		raise ValueError("list which lenght is less then 2 do not need to partition")
 	#使用最后一个元素作为分割点
-	print "end %s" % end
 	key=li[end]
 	middle_index=start
-	for x in xrange(start,end):
+	for x in xrange(start,end+1):
 		if li[x]<key:
 			li[middle_index],li[x]=li[x],li[middle_index]
 			middle_index+=1
@@ -56,11 +55,10 @@ def sort(li,start,end):
 	middle_index=partition(li,start,end)
 	sort(li,start,middle_index-1)
 	sort(li,middle_index+1,end)
-	print li
 	result=[]
 	for x in li:
 		if result and result[-1]==x:
-			result[-1].merge(x)
+			result[-1]=result[-1].merge(x)
 		else:
 			result.append(x)
 	li[:]=result[:]
