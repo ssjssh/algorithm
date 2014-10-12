@@ -2,7 +2,7 @@
 #-*- coding:utf-8 -*-
 
 def partition(li,start,end):
-	x=li[start]
+	x=li[(start+end)/2]
 	i=start
 	j=end
 	while True:
@@ -27,10 +27,10 @@ def quick_sort(li,start,end):
 	return li
 
 def main():
-	li=[13,19,9,5,12,8,7,4,11,2,6,21]
-	# print partition(li,0,11)
-	# print li
-	print quick_sort(li,0,11)
+	li=[2, 4, 5, 6, 7, 8, 9, 11, 12, 13, 19,21]
+	print partition(li,0,11)
+	print li
+	# print quick_sort(li,0,11)
 
 if __name__ == '__main__':
 	main()
