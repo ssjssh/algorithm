@@ -14,7 +14,12 @@ def count_sort(li,k):
 	for i in xrange(1,k):
 		rank[i]+=rank[i-1]
 
-	for x in li:
+	"""
+	鉴于算法执行的过程是把先遍历到的元素放在比较靠后的位置
+	如果从前往后遍历，那么算法就会把原来列表中前面的元素放
+	在后面，这样的话，算法就不是稳定的了。
+	"""
+	for x in reversed(li):
 		result[rank[x]-1]=x
 		rank[x]-=1
 	return result
