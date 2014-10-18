@@ -2,7 +2,7 @@
 #-*- coding:utf-8 -*-
 
 def partition(li,start,end):
-	li_len=end-start
+	li_len=end-start+1
 	if li_len<2:
 		raise ValueError("list which lenght is less then 2 do not need to partition")
 	#使用最后一个元素作为分割点
@@ -16,15 +16,13 @@ def partition(li,start,end):
 	return middle_index
 
 def sort(li,start,end):
-	li_len=end-start
+	li_len=end-start+1
 	if li_len<2:
 		return li
 	middle_index=partition(li,start,end)
 	sort(li,start,middle_index-1)
 	sort(li,middle_index+1,end)
 	return li
-
-
 
 
 def main():
