@@ -10,23 +10,21 @@ class Queue(object):
 		"""
 		用EmptyNode来实现特殊的空节点表示
 		"""
-		def __init__(self):
-			super(EmptyNode, self).__init__()
-
-	empty=EmptyNode()
-			
+		pass
+		
 	def __init__(self, cap):
 		super(Queue, self).__init__()
+		self.__empty=self.EmptyNode()
 		self.__cap = cap
 		if cap<0:
 			raise ValueError("cap of  queue can not be negative")
-		self.__value=[empty for x in xrange(0,self.__cap)]
+		self.__value=[self.__empty for x in xrange(0,self.__cap)]
 		#head指向下一个要出队列的元素，tail指向下一个要插入元素的位置。规定数据结构中的指针是简化逻辑的方法
 		self.__head=0
 		self.__tail=0
 
 	def enter(self,x):
-		if self.__tail==self.__head and self.__value[self.__head] is not empty:
+		if self.__tail==self.__head and self.__value[self.__head] is not self.__empty:
 			raise IndexError("queue is full")
 		self.__value[self.__tail]=x
 		self.__tail+=1
@@ -35,7 +33,7 @@ class Queue(object):
 				
 
 	def exit(self):
-		if self.__tail==self.__head and self.__value[self.__head] is empty:
+		if self.__tail==self.__head and self.__value[self.__head] is self.__empty:
 			raise IndexError("queue is empty")
 		v = self.__value[self.__head]
 		self.__head+=1
@@ -48,7 +46,7 @@ class Queue(object):
 		elif self.__head>self.__tail:
 			return self.__cap-(self.__head-self.__tail)
 		else:
-			if self.__value[self.__head] is empty:
+			if self.__value[self.__head] is self.__empty:
 				return 0
 			else:
 				return self.__cap
