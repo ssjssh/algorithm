@@ -84,6 +84,13 @@ class MultiArrayLinkedList(object):
 			return True
 		else:
 			return False
+	"""
+	整理链表的方法：如果事先知道有n个元素，那么就可以把full链表中超过n的元素移动到n以内，
+	也就是两个循环一个循环查找n内的空位置，另一个循环查找超过n的元素，然后就把他们交换就可以了。
+	这样复杂度是O(n)
+	"""
+	def compactify(self):
+		pass
 
 	def __str__(self):
 		li=[]
