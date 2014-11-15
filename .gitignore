@@ -5,6 +5,12 @@ __pycache__/
 # C extensions
 *.so
 
+#idea file
+.idea/
+
+#mac special file
+.DS_Store
+
 # Distribution / packaging
 .Python
 env/
