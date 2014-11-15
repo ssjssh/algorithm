@@ -1,0 +1,263 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+import copy
+
+
+class Stack(object):
+    """
+    使用Python快速实现一个栈
+    """
+
+    def __init__(self, *arg):
+        super(Stack, self).__init__()
+        self.__stack = list(copy.copy(arg))
+        self.__size = len(self.__stack)
+
+    def push(self, value):
+        self.__stack.append(value)
+        self.__size += 1
+
+    def pop(self):
+        if self.__size <= 0:
+            return None
+        else:
+            value = self.__stack[-1]
+            self.__size -= 1
+            del self.__stack[-1]
+            return value
+
+    def __len__(self):
+        return self.__size
+
+    def empty(self):
+        return self.__size <= 0
+
+    def __str__(self):
+        return "".join(["Stack(list=", str(self.__stack), ",size=", str(self.__size)])
+
+
+class Queue(object):
+    """
+    使用Python的list快速实现一个队列
+    """
+
+    def __init__(self, *arg):
+        super(Queue, self).__init__()
+        self.__queue = list(copy.copy(arg))
+        self.__size = len(self.__queue)
+
+    def enter(self, value):
+        self.__size += 1
+        self.__queue.append(value)
+
+    def exit(self):
+        if self.__size <= 0:
+            return None
+        else:
+            value = self.__queue[0]
+            self.__size -= 1
+            del self.__queue[0]
+            return value
+
+    def __len__(self):
+        return self.__size
+
+    def empty(self):
+        return self.__size <= 0
+
+    def __str__(self):
+        return "".join(["Queue(list=", str(self.__queue), ",size=", str(self.__size)])
+
+
+class BSTree(object):
+    """
+    实现二叉搜索树,并没有任何平衡树的逻辑
+    """
+
+    class Node(object):
+        """
+        表示树中的节点
+        """
+
+        def __init__(self, value, left, right, parent):
+            self.value = value
+            self.left = left
+            self.right = right
+            self.parent = parent
+
+        def __cmp__(self, other):
+            return cmp(self.value, other.value)
+
+        def __str__(self):
+            return "".join(["Node(value=", str(self.value), ")"])
+
+    def __init__(self, *arg):
+        super(BSTree, self).__init__()
+        self.__root = None
+        self.__size = 0
+        map(self.insert, arg)
+
+    def __find(self, value):
+        if value is None:
+            raise ValueError("None value not allowed in BSTree")
+        cur_node = self.__root
+        while cur_node is not None and cur_node.value != value:
+            if cur_node.value < value:
+                cur_node = cur_node.right
+            else:
+                cur_node = cur_node.left
+        return cur_node
+
+    def find(self, value):
+        return True if self.__find(value) is not None else False
+
+    def insert(self, value):
+        if value is None:
+            raise ValueError("BSTree don't allow None")
+        self.__size += 1
+
+        node = self.Node(value, None, None, None)
+        if self.__root is None:
+            self.__root = node
+        else:
+            cur_node = self.__root
+            while True:
+                cur_child_node = cur_node.left if node <= cur_node else cur_node.right
+                if cur_child_node is not None:
+                    cur_node = cur_child_node
+                else:
+                    node.parent = cur_node
+                    if cur_node <= node:
+                        cur_node.right = node
+                    else:
+                        cur_node.left = node
+                    break
+
+    def preorder(self, f):
+        result = []
+        stack = Stack(self.__root)
+        while True:
+            cur_node = stack.pop()
+            # 栈中没有元素的时候就表示所有的元素都已经遍历完了
+            if cur_node is None:
+                break
+            result.append(f(cur_node.value))
+            if cur_node.left is not None:
+                stack.push(cur_node.left)
+            if cur_node.right is not None:
+                stack.push(cur_node.right)
+        return result
+
+    def midorder(self, f):
+        result = []
+        stack = Stack(self.__root)
+        cur_node = self.__root.left
+        # 第一个阶段首先把所有树左边的节点放进栈里,这个时候并不遍历
+        # 第二个阶段的时候由于左节点遍历了之后,再遍历右节点
+        while not stack.empty() or cur_node is not None:
+            # 第二个判断条件比较重要,因为如果根节点没有左子树,这个时候栈就是空的,会直接退出循环
+            if cur_node is not None:
+                stack.push(cur_node)
+                cur_node = cur_node.left
+            else:
+                cur_node = stack.pop()
+                result.append(f(cur_node.value))
+                cur_node = cur_node.right
+        return result
+
+    def postorder(self, f):
+        """
+        后序遍历最好实现了,把前序遍历调转下就是后序遍历
+        """
+        return reversed(self.preorder(f))
+
+    def flatorder(self, f):
+        result = []
+        queue = Queue(self.__root)
+        while not queue.empty():
+            cur_node = queue.exit()
+            result.append(f(cur_node.value))
+            if cur_node.left is not None:
+                queue.enter(cur_node.left)
+
+            if cur_node.right is not None:
+                queue.enter(cur_node.right)
+        return result
+
+    def max(self):
+        cur_node = self.__root
+        while cur_node.right is not None:
+            cur_node = cur_node.right
+        return cur_node.value
+
+    def min(self):
+        cur_node = self.__root
+        while cur_node.left is not None:
+            cur_node = cur_node.left
+        return cur_node.value
+
+    def __str__(self):
+        return "\t".join(self.midorder(lambda s: str(s)))
+
+    def successor(self, value):
+        find_node = self.__find(value)
+        if find_node is None:
+            #处理节点不存在的情况
+            return None
+        if find_node.right is not None:
+            return find_node.right.value
+        else:
+            cur_parent = find_node.parent
+            cur_sub = find_node
+            while cur_parent is not None and cur_parent.right is cur_sub:
+                # 第一个条件是为了处理没有找到符合条件的父节点的情况,这个时候搜索失败
+                cur_parent, cur_sub = cur_parent.parent, cur_parent
+            return cur_parent.value if cur_parent is not None else None
+
+    def predecessor(self, value):
+        find_node = self.__find(value)
+        if find_node is None:
+            #处理节点不存在的情况
+            return None
+        if find_node.left is not None:
+            return find_node.left.value
+        else:
+            cur_parent = find_node.parent
+            cur_sub = find_node
+            while cur_parent is not None and cur_parent.left is cur_sub:
+                cur_parent, cur_sub = cur_parent.parent, cur_parent
+            return cur_parent.value if cur_parent is not None else None
+
+
+def main():
+    print "\ncheck stack"
+    stack = Stack(1, 2, 34, 5)
+    for x in range(0, 5):
+        stack.push(x)
+    print stack
+    for x in range(0, 15):
+        print "".join(["size=", str(len(stack)), " cur_node=", str(stack.pop())])
+
+    print "\ncheck queue"
+    queue = Queue(1, 2, 34, 5)
+    for x in range(0, 5):
+        queue.enter(x)
+    print stack
+    for x in range(0, 15):
+        print "".join(["size=", str(len(queue)), " cur_node=", str(queue.exit())])
+
+    print "\ncheck BSTree"
+    tree = BSTree(1, 2, 34, 5)
+    print tree
+    print tree.find(10)
+    print tree.find(5)
+    print tree.max()
+    print tree.min()
+    print tree.successor(34)
+    print tree.successor(5)
+    print tree.predecessor(1)
+    print tree.predecessor(2)
+
+
+if __name__ == '__main__':
+    main()
