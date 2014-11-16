@@ -116,7 +116,7 @@ class HashMap(object):
                 exists_flag = True
         if not exists_flag:
             exists_nodes.append(node)
-        self.__size += 1
+            self.__size += 1
         if self.__last_put is not None:
             self.__last_put.nex = node
         self.__last_put = node
