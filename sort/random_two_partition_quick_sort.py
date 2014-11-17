@@ -5,7 +5,7 @@
 """
 
 
-def partiton(li, start, end):
+def partition(li, start, end):
     key = li[start]
     m_start, m_end, i = start, start, start
     for j in xrange(start, end + 1):
@@ -24,7 +24,7 @@ def partiton(li, start, end):
 def sort(li, start, end):
     if end - start < 2:
         return li
-    m_start, m_end = partiton(li, start, end)
+    m_start, m_end = partition(li, start, end)
     sort(li, start, m_start - 1)
     sort(li, m_end, end)
     return li
