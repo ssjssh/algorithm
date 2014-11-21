@@ -202,7 +202,7 @@ class BSTree(object):
     def successor(self, value):
         find_node = self.__find(value)
         if find_node is None:
-            #处理节点不存在的情况
+            # 处理节点不存在的情况
             return None
         if find_node.right is not None:
             return find_node.right.value
@@ -217,7 +217,7 @@ class BSTree(object):
     def predecessor(self, value):
         find_node = self.__find(value)
         if find_node is None:
-            #处理节点不存在的情况
+            # 处理节点不存在的情况
             return None
         if find_node.left is not None:
             return find_node.left.value
@@ -227,6 +227,48 @@ class BSTree(object):
             while cur_parent is not None and cur_parent.left is cur_sub:
                 cur_parent, cur_sub = cur_parent.parent, cur_parent
             return cur_parent.value if cur_parent is not None else None
+
+    def __delete__(self, instance):
+        """
+        删除节点
+        :param instance:
+        :return:
+        """
+        node = self.__find(instance)
+        if node is None:
+            # 没有找到相应的节点直接退出
+            return None
+        if node.left is None:  # 第一二种情况
+            self.__transplant(node, node.right)
+        elif node.right is None:
+            self.__transplant(node, node.left)
+        else:  # 第三种情况,有两个子节点
+            successor = self.__find(self.successor(instance))  # 不考虑节点重复的问题,因此find方法可以正确找到对应的节点
+            if node.right is not successor:
+                self.__transplant(successor, successor.right)
+                # 后面的是设置移动之后新位置的节点,后继节点净身出户
+                successor.right = node.right
+                successor.right.parent = successor
+            self.__transplant(node, successor)
+            successor.left = node.left
+            successor.left.parent = successor
+
+    def __transplant(self, old, new):
+        """
+        移植操作,用new子树替换new子树
+        :param old:要被替换的子树
+        :param new:替换的子树
+        :return:
+        """
+        if self.__root is old:
+            self.__root = new
+        parent = old.parent
+        if parent.left is old:
+            parent.left = new
+        else:
+            parent.right = new
+        if new is not None:
+            new.parent = parent
 
 
 def main():
