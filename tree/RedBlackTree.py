@@ -3,6 +3,7 @@
 __author__ = 'shenshijun'
 
 from tree.BSTree import Stack
+from tree.BSTree import Queue
 
 
 class RedBlackTree(object):
@@ -70,9 +71,11 @@ class RedBlackTree(object):
                 parent.left = right_child
             else:
                 parent.right = right_child
-        else:
+        if node is self.__root:
             self.__root = right_child
+            self.__root.parent = self.Nil
         node.right = right_child_left
+        right_child.parent = node.parent
         node.parent = right_child
         right_child.left = node
 
@@ -93,10 +96,12 @@ class RedBlackTree(object):
                 parent.left = left_child
             else:
                 parent.right = left_child
-        else:
+        if node is self.__root:
             # 如果选择的正好是根节点,那么就需要宠幸设置根节点了
             self.__root = left_child
+            self.__root.parent = self.Nil
         node.left = left_right_child
+        left_child.parent = node.parent
         left_child.right = node
         node.parent = left_child
 
@@ -118,7 +123,7 @@ class RedBlackTree(object):
             else:
                 parent_node.right = node
             node.parent = parent_node
-            self.__insert_fixup(node)
+        self.__insert_fixup(node)
 
     def __insert_fixup(self, node):
         # 首先判断节点是不是根节点或者父节点是不是根节点
@@ -161,11 +166,144 @@ class RedBlackTree(object):
                     break
         self.__root.color = False  # 根节点必须被设置为黑色
 
-    def __delete__(self, instance):
-        pass
+    def __transplant(self, old, new):
+        parent = old.parent
+        if old is parent.left:
+            parent.left = new
+        else:
+            parent.right = new
+        if new is not self.Nil:
+            new.parent = parent
+        if parent is self.Nil:
+            self.__root = new
+
+    def delete(self, instance):
+        node = self.__find(instance)
+        if node is self.Nil:
+            return node
+        deleted_color = node.color
+        if node.left is self.Nil:
+            self.__transplant(node, node.right)
+            replace_node = node.right
+        elif node.right is self.Nil:
+            self.__transplant(node, node.left)
+            replace_node = node.left
+        else:  # 后继节点移动在右子树中,因为这个时候右子树一定存在
+            successor = self.__successor(instance)
+            deleted_color = successor.color
+            replace_node = successor.right
+            if successor.parent is not node:
+                self.__transplant(successor, successor.right)
+                if replace_node is self.Nil:
+                    replace_node.parent = successor.parent
+                if successor is not self.Nil:  # 在处理的过程中不希望改变Nil的值
+                    successor.right = node.right
+                    successor.right.parent = successor
+            self.__transplant(node, successor)
+            if successor is not self.Nil:
+                successor.left = node.left
+                successor.left.parent = successor
+                successor.color = node.color
+        if not deleted_color:
+            self.__delete_fixup(replace_node)
+        if replace_node is self.Nil:
+            replace_node.parent = None
+
+    def __find(self, key):
+        if key is None:
+            raise ValueError("None value not allowed in BSTree")
+        cur_node = self.__root
+        while cur_node is not self.Nil and cur_node.key != key:
+            if cur_node.key < key:
+                cur_node = cur_node.right
+            else:
+                cur_node = cur_node.left
+        return cur_node
+
+    def __successor(self, value):
+        find_node = self.__find(value)
+        if find_node is self.Nil:
+            # 处理节点不存在的情况
+            return None
+        if find_node.right is not self.Nil:
+            return self.__min(find_node.right)
+        else:
+            cur_parent = find_node.parent
+            cur_sub = find_node
+            while cur_parent is not self.Nil and cur_parent.right is cur_sub:
+                # 第一个条件是为了处理没有找到符合条件的父节点的情况,这个时候搜索失败
+                cur_parent, cur_sub = cur_parent.parent, cur_parent
+            return cur_parent
+
+    def max(self):
+        max_node = self.__max(self.__root)
+        return max_node.value if max_node is not None else None
+
+    def __max(self, root):
+        cur_node = root
+        while cur_node.right is not self.Nil:
+            cur_node = cur_node.right
+        return cur_node
+
+    def __min(self, root):
+        cur_node = root
+        while cur_node.left is not self.Nil:
+            cur_node = cur_node.left
+        return cur_node
+
+    def min(self):
+        min_node = self.__min(self.__root)
+        return min_node.value if min_node is not None else None
 
     def __delete_fixup(self, node):
-        pass
+        cur_node = node
+        while cur_node is not self.__root and cur_node.is_black():
+            parent = cur_node.parent
+            if parent.left is cur_node:
+                # 判断是左支还是右支,仅仅是实现所限
+                uncle = parent.right
+                if uncle.is_red():
+                    # 情况一:叔节点是红色,则重新设色并左旋
+                    uncle.color = False
+                    parent.color = True
+                    self.__left_rotate(parent)
+                elif uncle.left.is_black() and uncle.right.is_black():
+                    # 情况二(1):叔节点和其两个子节点都是黑色.则设置叔节点为红色,这个时候如果parent是红色,那么循环就会退出
+                    uncle.color = True
+                    cur_node = parent
+                elif uncle.right.is_black():
+                    uncle.color = True
+                    uncle.left.color = False
+                    # 情况二(2):叔节点红和其右节点是黑色,那么意味着叔节点的左节点是红色,这个时候叔节点右旋并且父子节点交换颜色
+                    self.__right_rotate(uncle)
+                else:
+                    # 情况二(3):叔节点是黑色,其右节点红色(可以由前面的转换而来),这个时候叔节点设红,其父节点和右子节点设黑并且父节点左旋
+                    parent.color = False
+                    uncle.color = True
+                    uncle.right.color = False
+                    self.__left_rotate(parent)
+                    # 退出情况
+                    cur_node = self.__root
+            else:
+                uncle = parent.left
+                if uncle.is_red():
+                    uncle.color = False
+                    parent.color = True
+                    self.__right_rotate(parent)
+                elif uncle.left.is_black() and uncle.right.is_black():
+                    uncle.color = True
+                    cur_node = parent
+                elif uncle.left.is_black():
+                    uncle.color = True
+                    uncle.right.color = False
+                    self.__left_rotate(uncle)
+                else:
+                    parent.color = False
+                    uncle.color = True
+                    uncle.left.color = False
+                    self.__right_rotate(parent)
+                    cur_node = self.__root
+        cur_node.color = False
 
     def midorder(self, f):
         """
@@ -190,14 +328,29 @@ class RedBlackTree(object):
         return result
 
     def print_tree(self):
-        print self.__root
-        print self.__root.left
-        print self.__root.right
-        self.__right_rotate(self.__root)
-        print "after rotate"
-        print self.__root
-        print self.__root.right
-        print self.__root.parent
+        """
+        打印树的结构
+        :return:
+        """
+        queue = Queue(self.__root)
+        next_level = 1
+        now_node_count = 0
+        while not queue.empty():
+            cur_node = queue.exit()
+            print str(cur_node) + "\t",
+            now_node_count += 1
+            if now_node_count == next_level:
+                print
+                now_node_count = 0
+                next_level *= 2
+            if cur_node.left is not None:
+                queue.enter(cur_node.left)
+
+            if cur_node.right is not None:
+                queue.enter(cur_node.right)
+
+    def test(self):
+        print self.__successor(8)
 
     def __str__(self):
         return "\t".join(self.midorder(lambda s: str(s)))
@@ -206,6 +359,8 @@ class RedBlackTree(object):
 def main():
     tree = RedBlackTree(7, 2, 1, 5, 4, 8, 11, 14, 15)
     print tree
+    print tree.delete(5)
+    tree.print_tree()
 
 
 if __name__ == "__main__":
