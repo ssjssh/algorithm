@@ -208,6 +208,8 @@ class RedBlackTree(object):
             self.__delete_fixup(replace_node)
         if replace_node is self.Nil:
             replace_node.parent = None
+            replace_node.left = None
+            replace_node.right = None
 
     def __find(self, key):
         if key is None:
