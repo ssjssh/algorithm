@@ -185,16 +185,26 @@ class BSTree(object):
         return result
 
     def max(self):
-        cur_node = self.__root
+        max_node = BSTree.__max(self.__root)
+        return max_node.value if max_node is not None else None
+
+    @classmethod
+    def __max(cls, root):
+        cur_node = root
         while cur_node.right is not None:
             cur_node = cur_node.right
-        return cur_node.value
+        return cur_node
 
-    def min(self):
-        cur_node = self.__root
+    @classmethod
+    def __min(cls, root):
+        cur_node = root
         while cur_node.left is not None:
             cur_node = cur_node.left
-        return cur_node.value
+        return cur_node
+
+    def min(self):
+        min_node = BSTree.__min(self.__root)
+        return min_node.value if min_node is not None else None
 
     def __str__(self):
         return "\t".join(self.midorder(lambda s: str(s)))
@@ -205,7 +215,8 @@ class BSTree(object):
             # 处理节点不存在的情况
             return None
         if find_node.right is not None:
-            return find_node.right.value
+            min_node = BSTree.__min(find_node.right)
+            return min_node.value if min_node is not None else None
         else:
             cur_parent = find_node.parent
             cur_sub = find_node
@@ -220,7 +231,8 @@ class BSTree(object):
             # 处理节点不存在的情况
             return None
         if find_node.left is not None:
-            return find_node.left.value
+            max_node = BSTree.__max(find_node.left)
+            return max_node.value if max_node is not None else None
         else:
             cur_parent = find_node.parent
             cur_sub = find_node
