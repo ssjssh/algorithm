@@ -21,7 +21,7 @@ def binary_search(sorted_list, value):
         if value < sorted_list[index]:
             index /= 2
         else:
-            index = index + (list_len - index) / 2
+            index += (list_len - index) / 2
         if temp == index:
             break
     if value != sorted_list[index]:

@@ -194,7 +194,7 @@ class RedBlackTree(object):
             replace_node = successor.right
             if successor.parent is not node:
                 self.__transplant(successor, successor.right)
-                if replace_node is self.Nil:
+                if replace_node is not self.Nil:
                     replace_node.parent = successor.parent
                 if successor is not self.Nil:  # 在处理的过程中不希望改变Nil的值
                     successor.right = node.right
@@ -359,7 +359,7 @@ class RedBlackTree(object):
 
 
 def main():
-    tree = RedBlackTree(7, 2, 1, 5, 4, 8, 11, 14, 15)
+    tree = RedBlackTree(7, 2, 1, 5, 4, 8, 11, 14, 14, 15)
     print tree
     print tree.delete(5)
     tree.print_tree()
