@@ -9,6 +9,7 @@ class OrderStatisticTree(object):
     """
     红黑树实现,红黑树的特性保证树的高度<=2lg(n+1),进而保证树中各个操作的性能.
     动态集合顺序统计底层使用红黑树实现，实现各个操作的复杂度都是lgn。
+    每一个子树的根节点在这个子树的相对顺序是左子节点的子树大小+1。因此根节点的序是根节点的左子节点的子树大小+1。
     """
 
     class Node(object):
@@ -42,8 +43,25 @@ class OrderStatisticTree(object):
         def __str__(self):
             return "".join(
                 ["Node(key=", str(self.key), ", color=",
-                 'Red)' if self.color else 'Black',
+                 'Red' if self.color else 'Black',
                  ', sub_size=', str(self.sub_size), ')'])
+
+        def not_empty(self):
+            return self.left is not None and self.right is not None
+
+        def inc(self):
+            if self.not_empty():
+                self.sub_size += 1
+            return self.sub_size
+
+        def dec(self):
+            if self.not_empty():
+                self.sub_size -= 1
+            return self.sub_size
+
+        def restore_sub_size(self):
+            if self.not_empty():
+                self.sub_size = self.left.sub_size + self.right.sub_size + 1
 
     def __init__(self, *vargs):
         """"""
@@ -58,13 +76,12 @@ class OrderStatisticTree(object):
     def __left_rotate(self, node):
         """
         二叉搜索树左旋操作
+        可以证明旋转并不会影响node的父节点的sub_size，所以不需要修改node的父节点
         :param node:要旋转的分支的父节点
         :return:None
         """
         right_child = node.right
-        left_child = node.left
         right_left_child = right_child.left
-        right_right_child = right_child.right
         parent = node.parent
         if right_child is self.Nil:
             raise NotImplementedError("没有右叶节点不支持左旋转")
@@ -82,8 +99,8 @@ class OrderStatisticTree(object):
         right_child.parent = node.parent
         node.parent = right_child
         right_child.left = node
-        node.sub_size = 1 + left_child.sub_size + right_left_child.sub_size
-        right_child.sub_size = 1 + node.sub_size + right_right_child.sub_size
+        node.restore_sub_size()
+        right_child.restore_sub_size()
 
     def __right_rotate(self, node):
         """
@@ -92,9 +109,7 @@ class OrderStatisticTree(object):
         :return:None
         """
         left_child = node.left
-        right_child = node.right
         left_right_child = left_child.right
-        left_left_child = left_child.left
         parent = node.parent
         if left_child is self.Nil:
             raise NotImplementedError('没有左节点不支持右旋转')
@@ -112,8 +127,8 @@ class OrderStatisticTree(object):
         left_child.parent = node.parent
         left_child.right = node
         node.parent = left_child
-        node.sub_size = right_child.sub_size + left_right_child.sub_size + 1
-        left_child.sub_size = 1 + node.sub_size + left_left_child.sub_size
+        node.restore_sub_size()
+        left_child.restore_sub_size()
 
     def insert(self, key):
         cur_node = self.__root
@@ -190,7 +205,7 @@ class OrderStatisticTree(object):
             self.__root = new
 
     def delete(self, instance):
-        node = self.__find(instance)
+        node = self.__walk_find(instance, lambda n: n.dec())
         if node is self.Nil:
             return node
         deleted_color = node.color
@@ -201,12 +216,12 @@ class OrderStatisticTree(object):
             self.__transplant(node, node.left)
             replace_node = node.left
         else:  # 后继节点移动在右子树中,因为这个时候右子树一定存在
-            successor = self.__successor(instance)
+            successor = self.__walk_min(node.right, lambda n: n.dec())
             deleted_color = successor.color
             replace_node = successor.right
             if successor.parent is not node:
                 self.__transplant(successor, successor.right)
-                if replace_node is not self.Nil:
+                if replace_node is self.Nil:
                     replace_node.parent = successor.parent
                 if successor is not self.Nil:  # 在处理的过程中不希望改变Nil的值
                     successor.right = node.right
@@ -216,6 +231,8 @@ class OrderStatisticTree(object):
                 successor.left = node.left
                 successor.left.parent = successor
                 successor.color = node.color
+                successor.restore_sub_size()
+                successor.parent.restore_sub_size()
         if not deleted_color:
             self.__delete_fixup(replace_node)
         if replace_node is self.Nil:
@@ -228,6 +245,18 @@ class OrderStatisticTree(object):
             raise ValueError("None value not allowed in BSTree")
         cur_node = self.__root
         while cur_node is not self.Nil and cur_node.key != key:
+            if cur_node.key < key:
+                cur_node = cur_node.right
+            else:
+                cur_node = cur_node.left
+        return cur_node
+
+    def __walk_find(self, key, func):
+        if key is None:
+            raise ValueError("None value not allowed in BSTree")
+        cur_node = self.__root
+        while cur_node is not self.Nil and cur_node.key != key:
+            func(cur_node)
             if cur_node.key < key:
                 cur_node = cur_node.right
             else:
@@ -260,8 +289,12 @@ class OrderStatisticTree(object):
         return cur_node
 
     def __min(self, root):
+        return self.__walk_min(root, lambda node: node)
+
+    def __walk_min(self, root, func):
         cur_node = root
         while cur_node.left is not self.Nil:
+            func(cur_node)
             cur_node = cur_node.left
         return cur_node
 
@@ -369,12 +402,49 @@ class OrderStatisticTree(object):
     def __str__(self):
         return "\t".join(self.midorder(lambda s: str(s)))
 
+    def os_select(self, index):
+        """
+        类似于二分查找，只是本来应该转向左边的逻辑变成了转向左子树
+        在转向右子树的时候要注意计算这个时候在右子树中的相对顺序
+        本质上就是把计算每一个节点的在本树的相对序，然后和需要查找的序对比看看是不是这个节点
+        :param index:
+        :return:
+        """
+        find_rank = index
+        cur_node = self.__root
+        while cur_node is not self.Nil:
+            cur_rank = cur_node.left.sub_size + 1
+            if cur_rank == find_rank:
+                return cur_node.key
+            elif cur_rank < find_rank:
+                cur_node = cur_node.right
+                find_rank -= cur_rank
+            else:
+                cur_node = cur_node.left
+        return cur_node.key
+
+    def os_rank(self, value):
+        cur_node = self.__root
+        move_right_incr = 0
+        while cur_node is not self.Nil:
+            cur_rank = cur_node.left.sub_size + 1
+            if cur_node.key == value:
+                return cur_rank + move_right_incr
+            elif cur_node.key >= value:
+                cur_node = cur_node.left
+            else:
+                cur_node = cur_node.right
+                # 在往右边移动的时候要记录下相对序和绝对序的差距
+                move_right_incr += cur_rank
+        return -1
+
 
 def main():
-    tree = DynamicSet(7, 2, 1, 5, 4, 8, 11, 14, 14, 15)
-    print tree
-    print tree.delete(5)
-    tree.print_tree()
+    tree = OrderStatisticTree(7, 2, 1, 5, 4, 8, 11, 14, 14, 15)
+    print tree.os_select(1)
+    print tree.os_select(10)
+    print tree.os_select(5)
+    print tree.os_rank(11)
 
 
 if __name__ == "__main__":
