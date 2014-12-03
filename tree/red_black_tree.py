@@ -2,8 +2,8 @@
 # -*- coding:UTF-8
 __author__ = 'shenshijun'
 
-from tree.BSTree import Stack
-from tree.BSTree import Queue
+from tree.bstree import Stack
+from tree.bstree import Queue
 
 
 class RedBlackTree(object):
