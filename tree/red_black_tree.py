@@ -2,6 +2,10 @@
 # -*- coding:UTF-8
 __author__ = 'shenshijun'
 
+"""
+实际上，在红黑树中使用单例空节点会出现一个根本的问题：也就是父节点没法保存。这是一个大问题。
+可能应该用多个对象表示，或者实现没有父节点的红黑树
+"""
 from tree.bstree import Stack
 from tree.bstree import Queue
 
