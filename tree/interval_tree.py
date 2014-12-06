@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8
 __author__ = 'shenshijun'
-from tree.bstree import Stack
-from tree.bstree import Queue
+from tree.binarystree import Stack
+from tree.binarystree import Queue
 
 
 class Node(object):
