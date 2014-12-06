@@ -33,7 +33,7 @@ class Stack(object):
         return self.__size <= 0
 
     def __str__(self):
-        return "".join(["Stack(list=", str(self.__stack), ",size=", str(self.__size)])
+        return "".join(["Stack(list=", str(map(lambda s:str(s), self.__stack)), ",size=", str(self.__size), ')'])
 
 
 class Queue(object):
