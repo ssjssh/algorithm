@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8
+from lib.Queue import Queue
+from lib.Stack import Stack
+
 __author__ = 'shenshijun'
-from tree.binarystree import Stack
-from tree.binarystree import Queue
 
 
 class Node(object):

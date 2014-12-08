@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8
-__author__ = 'shenshijun'
+from lib.Stack import Stack
 
-from tree.binarystree import Stack
+__author__ = 'shenshijun'
 
 
 class Node(object):
