@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8
-from lib.Stack import Stack
+from lib.stack import Stack
 
 __author__ = 'shenshijun'
 

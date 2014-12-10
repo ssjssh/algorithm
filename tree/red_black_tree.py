@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8
-from lib.Queue import Queue
-from lib.Stack import Stack
+from lib.queue import Queue
+from lib.stack import Stack
 
 __author__ = 'shenshijun'
 

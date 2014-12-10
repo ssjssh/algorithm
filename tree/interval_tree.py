@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8
-from lib.Queue import Queue
-from lib.Stack import Stack
+from lib.queue import Queue
+from lib.stack import Stack
 
 __author__ = 'shenshijun'
 
@@ -403,10 +403,8 @@ class IntervalTree(object):
             if cur_node.right is not None:
                 queue.enter(cur_node.right)
 
-
     def test(self):
         print self.__successor(8)
-
 
     def __str__(self):
         return "\t".join(self.midorder(lambda s: str(s)))
