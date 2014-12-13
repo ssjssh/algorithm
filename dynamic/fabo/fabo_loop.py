@@ -1,5 +1,8 @@
 #!/usr/bin/env python 
 # -*- coding:utf-8 -*-
+"""
+使用循环实现的斐波那契数列其实就是自底向上方式实现的动态规划
+"""
 
 def loop_fibonacci(n):
     this = 0

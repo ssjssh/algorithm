@@ -12,7 +12,7 @@ def extract_min(matrix, w, h):
     while True:
         left = empty_index + w
         right = empty_index + 1
-        #1，矩阵碰到右边界的时候
+        # 1，矩阵碰到右边界的时候
         #2，右边的值是None，表示没有元素
         print "left :", left
         print "right :", right
@@ -47,6 +47,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-			
-		
 
