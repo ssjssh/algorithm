@@ -21,7 +21,7 @@ class Set(object):
         return self.__dic.get(item, False)
 
     def delete(self, instance):
-        if self.exists(instance):
+        if instance in self:
             del self.__dic[instance]
 
     def __len__(self):
@@ -34,7 +34,7 @@ class Set(object):
         :param item:
         :return:
         """
-        result = self.__dic.get(item, None)
+        result = self.__dic.get(item)
         if result is None:
             self.add(item)
             result = item
@@ -44,6 +44,17 @@ class Set(object):
         return self.__dic.iterkeys()
 
     def __str__(self):
-        return ",".join(iter(self))
+        return ",".join(map(lambda node: str(node), iter(self)))
+
+def main():
+    test_set = Set()
+    test_set.add(10)
+    test_set.add(10)
+    test_set.add(10)
+    print test_set
+
+
+if __name__ == "__main__":
+    main()
 
 
