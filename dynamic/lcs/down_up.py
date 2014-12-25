@@ -53,10 +53,10 @@ def __lcs(list_x, list_y, end_x, end_y, __len_dict, __ele_dict):
                 __ele_dict[(x, y)] = "\\"
             elif __len_dict[(x - 1, y)] >= __len_dict[(x, y - 1)]:
                 __len_dict[(x, y)] = __len_dict[(x - 1, y)]
-                __ele_dict[(x, y)] = '|';
+                __ele_dict[(x, y)] = '|'
             else:
                 __len_dict[(x, y)] = __len_dict[(x, y - 1)]
-                __ele_dict[(x, y)] = '-';
+                __ele_dict[(x, y)] = '-'
     return __len_dict[(end_x, end_y)]
 
 
