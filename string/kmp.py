@@ -20,18 +20,21 @@ def match(origin, pattern):
 
     origin_index, pattern_index = 0, 0
     next_list = build_next()
+    print(next_list)
     while origin_index < origin_len:
-        if pattern[pattern_index] == origin[origin_index]:
-            pattern_index += 1
-            origin_index += 1
+        # while需要放在前面，如果放在后面的话且有匹配的情况下pattern[pattern_index]就会越界
         while pattern_index > 0 and origin[origin_index] != pattern[pattern_index]:
             pattern_index = next_list[pattern_index]
+        if pattern[pattern_index] == origin[origin_index]:
+            pattern_index += 1
+        origin_index += 1
+
         if pattern_index == pattern_len:
             return origin_index - pattern_len
 
 
 def main():
-    print match("sb", 'sb')
+    print match("assssbsss", 'sb')
 
 
 if __name__ == "__main__":
