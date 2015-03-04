@@ -268,46 +268,47 @@ class RedBlackTree(object):
             parent = cur_node.parent
             if parent.left is cur_node:
                 # 判断是左支还是右支,仅仅是实现所限
-                uncle = parent.right
-                if uncle.is_red():
-                    # 情况一:叔节点是红色,则重新设色并左旋
-                    uncle.color = False
+                brother = parent.right
+                if brother.is_red():
+                    # 情况一:兄弟节点是红色,则重新设色并左旋
+                    brother.color = False
                     parent.color = True
                     self.__left_rotate(parent)
-                elif uncle.left.is_black() and uncle.right.is_black():
-                    # 情况二(1):叔节点和其两个子节点都是黑色.则设置叔节点为红色,这个时候如果parent是红色,那么循环就会退出
-                    uncle.color = True
+                    cur_node = brother
+                elif brother.left.is_black() and brother.right.is_black():
+                    # 情况二(1):兄弟节点和其两个子节点都是黑色.则设置兄弟节点为红色,这个时候如果parent是红色,那么循环就会退出
+                    brother.color = True
                     cur_node = parent
-                elif uncle.right.is_black():
-                    uncle.color = True
-                    uncle.left.color = False
-                    # 情况二(2):叔节点红和其右节点是黑色,那么意味着叔节点的左节点是红色,这个时候叔节点右旋并且父子节点交换颜色
-                    self.__right_rotate(uncle)
+                elif brother.right.is_black():
+                    brother.color = True
+                    brother.left.color = False
+                    # 情况二(2):兄弟节点红和其右节点是黑色,那么意味着兄弟节点的左节点是红色,这个时候兄弟节点右旋并且父子节点交换颜色
+                    self.__right_rotate(brother)
                 else:
-                    # 情况二(3):叔节点是黑色,其右节点红色(可以由前面的转换而来),这个时候叔节点设红,其父节点和右子节点设黑并且父节点左旋
+                    # 情况二(3):兄弟节点是黑色,其右节点红色(可以由前面的转换而来),这个时候兄弟节点设红,其父节点和右子节点设黑并且父节点左旋
                     parent.color = False
-                    uncle.color = True
-                    uncle.right.color = False
+                    brother.color = True
+                    brother.right.color = False
                     self.__left_rotate(parent)
                     # 退出情况
                     cur_node = self.__root
             else:
-                uncle = parent.left
-                if uncle.is_red():
-                    uncle.color = False
+                brother = parent.left
+                if brother.is_red():
+                    brother.color = False
                     parent.color = True
                     self.__right_rotate(parent)
-                elif uncle.left.is_black() and uncle.right.is_black():
-                    uncle.color = True
+                elif brother.left.is_black() and brother.right.is_black():
+                    brother.color = True
                     cur_node = parent
-                elif uncle.left.is_black():
-                    uncle.color = True
-                    uncle.right.color = False
-                    self.__left_rotate(uncle)
+                elif brother.left.is_black():
+                    brother.color = True
+                    brother.right.color = False
+                    self.__left_rotate(brother)
                 else:
                     parent.color = False
-                    uncle.color = True
-                    uncle.left.color = False
+                    brother.color = True
+                    brother.left.color = False
                     self.__right_rotate(parent)
                     cur_node = self.__root
         cur_node.color = False
