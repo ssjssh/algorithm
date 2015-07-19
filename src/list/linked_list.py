@@ -39,6 +39,12 @@ class LinkedList(object):
             self.append(value)
 
     def insert(self, index, value):
+        """
+        在列表的中间插入一个元素
+        :param index: 要插入的位置
+        :param value: 要插入的值
+        :return: 插入值之后列表的大小
+        """
         if index > self.__length:
             raise IndexError("can not insert beyond the list")
 
@@ -53,31 +59,51 @@ class LinkedList(object):
         cur_node.prev = node
         prev_node.next_node = node
         self.__length += 1
-        return node
+        return self.__length
 
     def append(self, value):
+        """
+        在列表的结尾插入一个元素
+        :param value:要插入的元素
+        :return: 插入之后列表的大小
+        """
         last_node = self.__dump.prev
         node = LinkedList.Node(value, last_node, self.__dump)
         # 现在结尾的节点指向新加的结尾点
         last_node.next_node = node
         self.__dump.prev = node
         self.__length += 1
-        return node
+        return self.__length
 
     def prepend(self, value):
+        """
+        在列表的最前面插入一个值
+        :param value: 要插入的元素
+        :return: 插入之后列表的大小
+        """
         node = LinkedList.Node(value, self.__dump, self.__dump.next_node)
         self.__dump.next_node.prev = node
         self.__dump.next_node = node
         self.__length += 1
-        return node
+        return self.__length
 
     def search(self, value):
+        """
+        寻找一个元素是否存在于列表中
+        :param value: 要寻找的元素
+        :return: 如果没有,返回None;如果有,则返回找到的值
+        """
         cur_node = self.__dump.next_node
         while cur_node is not self.__dump and cur_node.value != value:
             cur_node = cur_node.next_node
         return cur_node.value
 
     def delete(self, value):
+        """
+        删除一个值
+        :param value: 要删除的元素
+        :return: 被删除的值
+        """
         cur_node = self.__dump.next_node
         while cur_node is not self.__dump and cur_node.value != value:
             cur_node = cur_node.next_node
