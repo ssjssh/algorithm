@@ -5,6 +5,7 @@
 实现一个带哨兵的双向循环链表。一个哨兵是一个空对象，在双向链表实现中简化了改变链接的时候需要判断None的情况。
 实现这个链表的过程时刻记得更新插入和删除节点的前后节点的指针
 """
+from __builtin__ import object
 
 
 class LinkedList(object):
@@ -47,10 +48,11 @@ class LinkedList(object):
     def append(self, value):
         last_node = self.__nil.prev
         node = LinkedList.Node(value, last_node, self.__nil)
-        last_node.next = node  #现在结尾的节点指向新加的结尾点
+        # 现在结尾的节点指向新加的结尾点
+        last_node.next = node
         self.__nil.prev = node
         self.__length += 1
-        #处理空链表的情况
+        # 处理空链表的情况
         if self.__nil.next is self.__nil:
             self.__nil.next = node
         return node
@@ -59,7 +61,7 @@ class LinkedList(object):
         node = LinkedList.Node(value, self.__nil, self.__nil.next)
         self.__nil.next = node
         self.__nil.next.prev = node
-        #处理空链表的情况
+        # 处理空链表的情况
         if self.__nil.prev is self.__nil:
             self.__nil.prev = node
         self.__length += 1
@@ -75,7 +77,7 @@ class LinkedList(object):
         cur_node = self.__nil.next
         while cur_node is not self.__nil and cur_node.key != value:
             cur_node = cur_node.next
-        #如果不是空链表，那么就是查找到了相应的元素
+        # 如果不是空链表，那么就是查找到了相应的元素
         if cur_node is not self.__nil:
             cur_node.prev.next = cur_node.next
             cur_node.next.prev = cur_node.prev

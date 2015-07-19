@@ -24,7 +24,7 @@ class Node(object):
     def __str__(self):
         return "".join(['Node(keys=', ",".join(map(lambda key: str(key), self.keys)),
                         ',leaf' if self.is_leaf else ',not leaf',
-                        ',childs num=', str(len(self.childs)) ,')\n'])
+                        ',childs num=', str(len(self.childs)), ')\n'])
 
     def __len__(self):
         return self.__size
@@ -94,18 +94,20 @@ class BTree(object):
     def __split(self, node):
         if self.full(node):
             parent_node = node.parent
-            middle_key = node.keys[self.__load_factor-1]
+            middle_key = node.keys[self.__load_factor - 1]
             if parent_node is None:
                 # 处理根节点
                 self.__root = Node(False, [])
                 parent_node = self.__root
             parent_middle_index = parent_node.append(middle_key)
-            left_node = Node(node.is_leaf, node.keys[:self.__load_factor-1], node.childs[:self.__load_factor], parent_node)
-            #注意设定分裂节点的子节点的父指针
+            left_node = Node(node.is_leaf, node.keys[:self.__load_factor - 1], node.childs[:self.__load_factor],
+                             parent_node)
+            # 注意设定分裂节点的子节点的父指针
             for child in left_node.childs:
                 if child is not None:
                     child.parent = left_node
-            right_node = Node(node.is_leaf, node.keys[self.__load_factor:], node.childs[self.__load_factor:], parent_node)
+            right_node = Node(node.is_leaf, node.keys[self.__load_factor:], node.childs[self.__load_factor:],
+                              parent_node)
             for child in right_node.childs:
                 if child is not None:
                     child.parent = right_node
@@ -164,12 +166,12 @@ class BTree(object):
             if cur_node.is_leaf:
                 # 到叶节点了，开始把叶节点的所有关键字都遍历掉
                 result.extend(map(f, cur_node.keys))
-                #开始从栈中取元素，遍历下一个节点叶节点
+                # 开始从栈中取元素，遍历下一个节点叶节点
                 if stack.empty():
                     return result
                 cur_node, i = stack.pop()
                 result.append(f(cur_node.keys[i]))
-                if i < len(cur_node)-1:
+                if i < len(cur_node) - 1:
                     stack.push((cur_node, i + 1))
                 cur_node = cur_node.childs[i + 1]
             else:
@@ -188,7 +190,8 @@ class BTree(object):
 
 
 def main():
-    btree = BTree(3, 'A', 'B', 'C', 'D', 'E', 'F', 'G','H','I','J','K','L','M','N','O','P','R','S','T','U','V','X','Y','Z')
+    btree = BTree(3, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U',
+                  'V', 'X', 'Y', 'Z')
     print btree
     print btree.max()
     print btree.min()
@@ -196,5 +199,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

@@ -45,7 +45,7 @@ class Node(object):
             self.sub_max = max([self.left.sub_max, self.right.sub_max])
 
     def not_empty(self):
-            return self.left is not None and self.right is not None
+        return self.left is not None and self.right is not None
 
     @property
     def key(self):
@@ -56,7 +56,6 @@ class IntervalTree(object):
     """
     用红黑树实现区间树
     """
-
 
     def __init__(self, *vargs):
 
@@ -71,7 +70,6 @@ class IntervalTree(object):
     def __len__(self):
 
         return self.__size
-
 
     def __left_rotate(self, node):
 
@@ -103,7 +101,6 @@ class IntervalTree(object):
         node.restore_max()
         right_child.restore_max()
 
-
     def __right_rotate(self, node):
         """
         二叉搜索树右旋操作
@@ -134,7 +131,6 @@ class IntervalTree(object):
         node.restore_max()
         left_child.restore_max()
 
-
     def insert(self, key):
         cur_node = self.__root
         node = Node(key[0], key[1], key[1], self.Nil, self.Nil, self.Nil, True)
@@ -158,7 +154,6 @@ class IntervalTree(object):
                 parent_node.right = node
             node.parent = parent_node
         self.__insert_fixup(node)
-
 
     def __insert_fixup(self, node):
 
@@ -269,7 +264,6 @@ class IntervalTree(object):
                 cur_node = cur_node.left
         return cur_node
 
-
     def __successor(self, value):
         find_node = self.__find(value)
         if find_node is self.Nil:
@@ -301,11 +295,9 @@ class IntervalTree(object):
             cur_node = cur_node.left
         return cur_node
 
-
     def min(self):
         min_node = self.__min(self.__root)
         return min_node.value if min_node is not None else None
-
 
     def __delete_fixup(self, node):
         cur_node = node
@@ -357,7 +349,6 @@ class IntervalTree(object):
                     cur_node = self.__root
         cur_node.color = False
 
-
     def midorder(self, f):
         """
         中序遍历
@@ -379,7 +370,6 @@ class IntervalTree(object):
                 result.append(f(cur_node))
                 cur_node = cur_node.right
         return result
-
 
     def print_tree(self):
         """
@@ -419,4 +409,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

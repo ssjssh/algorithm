@@ -33,7 +33,6 @@ class Queue(object):
         if self.__tail >= self.__cap:
             self.__tail = 0
 
-
     def exit(self):
         if self.__tail == self.__head and self.__value[self.__head] is self.__empty:
             raise IndexError("queue is empty")
@@ -53,5 +52,3 @@ class Queue(object):
                 return 0
             else:
                 return self.__cap
-
-

@@ -46,6 +46,7 @@ class Set(object):
     def __str__(self):
         return ",".join(map(lambda node: str(node), iter(self)))
 
+
 def main():
     test_set = Set()
     test_set.add(10)
@@ -56,5 +57,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

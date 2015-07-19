@@ -1,5 +1,5 @@
 #!/usr/bin/env
-#!-*- coding:utf-8 -*-
+# !-*- coding:utf-8 -*-
 import Queue
 
 
@@ -85,7 +85,6 @@ class NTree(object):
             if cur_node.child is not None:
                 stack.push(cur_node.child)
         return result
-
 
     def breadth_walk(self, f):
         """

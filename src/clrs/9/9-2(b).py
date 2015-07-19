@@ -14,8 +14,8 @@ def partition(li, start, end):
     li_len = end - start + 1
     if li_len < 2:
         raise ValueError("list which lenght is less then 2 do not need to partition")
-    #使用随机元素元素作为分割点并且把随机元素放在列表最后
-    #这样就可以不变动原来的逻辑了
+    # 使用随机元素元素作为分割点并且把随机元素放在列表最后
+    # 这样就可以不变动原来的逻辑了
     key_index = randint(start, end)
     key = li[key_index]
     li[key_index], li[end] = li[end], li[key_index]

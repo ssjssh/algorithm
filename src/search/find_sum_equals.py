@@ -31,7 +31,7 @@ def binary_search(sorted_list, value):
 def __merge_sort__(llist, rlist):
     llen = len(llist)
     rlen = len(rlist)
-    #递归结束时间：[]和[ele]
+    # 递归结束时间：[]和[ele]
     if llen + rlen < 2:
         return llist + rlist
     lrst = __merge_sort__(llist[:llen / 2], llist[llen / 2:])
@@ -39,7 +39,7 @@ def __merge_sort__(llist, rlist):
     lcursor, rcursor = 0, 0
     result = []
     min_len = min(llen, rlen)
-    #从小到大排序
+    # 从小到大排序
     while lcursor < llen and rcursor < rlen:
         if lrst[lcursor] < rrst[rcursor]:
             result.append(lrst[lcursor])
@@ -47,7 +47,7 @@ def __merge_sort__(llist, rlist):
         else:
             result.append(rrst[rcursor])
             rcursor += 1
-    #把没有合并的数据合并起来。
+    # 把没有合并的数据合并起来。
     result.extend(lrst[lcursor:])
     result.extend(rrst[rcursor:])
     return result

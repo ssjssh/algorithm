@@ -1,4 +1,4 @@
 # /usr/bin/env python
-#-*- coding:uft-8
+# -*- coding:uft-8
 """
 """

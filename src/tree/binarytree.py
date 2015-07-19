@@ -1,5 +1,5 @@
 # /usr/bin/env python
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 import Queue
 
 
@@ -10,8 +10,8 @@ class Stack(object):
 
     def __init__(self, cap):
         super(Stack, self).__init__()
-        self.__cap = cap  #栈大小
-        self.__length = 0  #栈长度
+        self.__cap = cap  # 栈大小
+        self.__length = 0  # 栈长度
         if self.__cap < 0:
             raise ValueError("length of Stack can not be negtive")
         self.__values = [0 for x in xrange(0, self.__cap)]
@@ -94,7 +94,7 @@ class Btree(object):
         while not q.empty():
             cur_node = q.get()
             result.append(f(cur_node.key))
-            #注意：这儿的顺序比较讲究，不能调换
+            # 注意：这儿的顺序比较讲究，不能调换
             if cur_node.left is not None:
                 q.put(cur_node.left)
 
@@ -115,7 +115,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-		

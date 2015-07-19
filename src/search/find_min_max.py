@@ -1,5 +1,5 @@
 # /usr/bin/env python
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 """
 同时找出一个列表中的最大和最小的值，算法实现的时候分别记录
 了到当前的最大值和最小值。并且每次比较都对一对输入元素进行比较。
@@ -21,7 +21,7 @@ def find_min_max(li):
         li_max = li[0]
 
     start = 2
-    #处理奇数的情况
+    # 处理奇数的情况
     if li_len / 2 is 1 and li_len >= 3:
         start += 1
         if li[3] < li_min:
@@ -30,7 +30,7 @@ def find_min_max(li):
             li_max = li[3]
 
     for x in xrange(start, li_len, 2):
-        #默认first是小的
+        # 默认first是小的
         first = li[x]
         second = li[x + 1]
         if first > second:
@@ -51,5 +51,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-		

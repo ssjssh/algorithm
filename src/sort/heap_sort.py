@@ -31,14 +31,14 @@ class Heap(object):
         largest = parent
         left = parent * 2 + 1
         right = parent * 2 + 2
-        #这个地方使用left和right比较，是为了防止到了叶节点的时候会出现数组越界。
+        # 这个地方使用left和right比较，是为了防止到了叶节点的时候会出现数组越界。
         if left < self.length and self.__array[parent] < self.__array[left]:
             largest = left
 
         if right < self.length and self.__array[largest] < self.__array[right]:
             largest = right
 
-        #保证在父元素就是最大值的时候不要移动元素
+        # 保证在父元素就是最大值的时候不要移动元素
         if largest != parent:
             self.__array[largest], self.__array[parent] = self.__array[parent], self.__array[largest]
             self.heapify(largest)
@@ -52,14 +52,14 @@ class Heap(object):
             largest = parent
             left = parent * 2 + 1
             right = parent * 2 + 2
-            #这个地方使用left和right比较，是为了防止到了叶节点的时候会出现数组越界。
+            # 这个地方使用left和right比较，是为了防止到了叶节点的时候会出现数组越界。
             if left < self.length and self.__array[parent] < self.__array[left]:
                 largest = left
 
             if right < self.length and self.__array[largest] < self.__array[right]:
                 largest = right
 
-            #保证在父元素就是最大值的时候不要移动元素
+            # 保证在父元素就是最大值的时候不要移动元素
             if largest != parent:
                 self.__array[largest], self.__array[parent] = self.__array[parent], self.__array[largest]
                 parent = largest
@@ -84,7 +84,6 @@ class Heap(object):
             self.__deep_walk_through(func, left)
             self.__deep_walk_through(func, right)
 
-
     def __str__(self):
         title = "Heap Length: %s\n" % self.length
         content_list = [title]
@@ -102,7 +101,6 @@ class Heap(object):
         for x in self.__dict__:
             newone.__dict__[x] = copy.deepcopy(self.__dict__[x])
         return newone
-
 
     @classmethod
     def heap_sort(cls, list):

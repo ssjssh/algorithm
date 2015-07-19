@@ -103,9 +103,8 @@ class Matrix(object):
             result[x].extend(temp)
         return Matrix(m11.__weight + m12.__weight, m11.__height + m21.__height, result)
 
-
     def __strassen_method(self, other):
-        #首先需要保证矩阵可以分割
+        # 首先需要保证矩阵可以分割
         a11, a12, a21, a22 = Matrix.__divide_matrix(self)
         b11, b12, b21, b22 = Matrix.__divide_matrix(other)
         # print b11
@@ -150,4 +149,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-	

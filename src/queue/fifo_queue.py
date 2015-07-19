@@ -31,14 +31,14 @@ class Heap(object):
         largest = parent
         left = parent * 2 + 1
         right = parent * 2 + 2
-        #这个地方使用left和right比较，是为了防止到了叶节点的时候会出现数组越界。
+        # 这个地方使用left和right比较，是为了防止到了叶节点的时候会出现数组越界。
         if left < self.length and self.__array[parent] < self.__array[left]:
             largest = left
 
         if right < self.length and self.__array[largest] < self.__array[right]:
             largest = right
 
-        #保证在父元素就是最大值的时候不要移动元素
+        # 保证在父元素就是最大值的时候不要移动元素
         if largest != parent:
             self.__array[largest], self.__array[parent] = self.__array[parent], self.__array[largest]
             self.heapify(largest)
@@ -52,14 +52,14 @@ class Heap(object):
             largest = parent
             left = parent * 2 + 1
             right = parent * 2 + 2
-            #这个地方使用left和right比较，是为了防止到了叶节点的时候会出现数组越界。
+            # 这个地方使用left和right比较，是为了防止到了叶节点的时候会出现数组越界。
             if left < self.length and self.__array[parent] < self.__array[left]:
                 largest = left
 
             if right < self.length and self.__array[largest] < self.__array[right]:
                 largest = right
 
-            #保证在父元素就是最大值的时候不要移动元素
+            # 保证在父元素就是最大值的时候不要移动元素
             if largest != parent:
                 self.__array[largest], self.__array[parent] = self.__array[parent], self.__array[largest]
                 parent = largest
@@ -84,7 +84,6 @@ class Heap(object):
             self.__deep_walk_through(func, left)
             self.__deep_walk_through(func, right)
 
-
     def __str__(self):
         title = "Heap Length: %s\n" % self.length
         content_list = [title]
@@ -102,7 +101,7 @@ class Heap(object):
         insert_index = self.length
         while True:
             parent = (insert_index - 1) / 2
-            #这儿需要判断使得parent不会越界
+            # 这儿需要判断使得parent不会越界
             if parent >= 0 and self.__array[insert_index] > self.__array[parent]:
                 self.__array[parent], self.__array[insert_index] = self.__array[insert_index], self.__array[parent]
                 insert_index = parent
@@ -119,7 +118,7 @@ class Heap(object):
         insert_index = self.length
         while True:
             parent = (insert_index - 1) / 2
-            #这儿需要判断使得parent不会越界
+            # 这儿需要判断使得parent不会越界
             if parent >= 0 and value > self.__array[parent]:
                 self.__array[insert_index] = self.__array[parent]
                 insert_index = parent
@@ -127,7 +126,6 @@ class Heap(object):
                 break
         self.__array[insert_index] = value
         self.length += 1
-
 
     def __setitem__(self, index, value):
         self.__array[index] = value
@@ -220,7 +218,6 @@ class MaxQueue(object):
     def __setitem__(self, key, value):
         node = MaxQueue.Node(key, value)
         self.__heap.append_with_one_assign(node)
-
 
     def __str__(self):
         return str(self.__heap)

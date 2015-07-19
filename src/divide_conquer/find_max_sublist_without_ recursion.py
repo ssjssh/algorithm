@@ -13,7 +13,7 @@ def find_max_sublist(li):
             right = x
             max_sum = b
 
-    return (left, right, max_sum)
+    return left, right, max_sum
 
 
 def main():

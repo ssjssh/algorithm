@@ -20,7 +20,6 @@ def match(origin, pattern):
 
     origin_index, pattern_index = 0, 0
     next_list = build_next()
-    print(next_list)
     while origin_index < origin_len:
         # while需要放在前面，如果放在后面的话且有匹配的情况下pattern[pattern_index]就会越界
         while pattern_index > 0 and origin[origin_index] != pattern[pattern_index]:
@@ -39,6 +38,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-

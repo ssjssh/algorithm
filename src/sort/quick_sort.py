@@ -5,7 +5,7 @@ def partition(li, start, end):
     li_len = end - start + 1
     if li_len < 2:
         raise ValueError("list which lenght is less then 2 do not need to partition")
-    #使用最后一个元素作为分割点
+    # 使用最后一个元素作为分割点
     key = li[end]
     middle_index = start
     for x in xrange(start, end):

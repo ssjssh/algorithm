@@ -132,7 +132,6 @@ class SkipList(object):
                 # 既不能右行也不能下行的时候查询失败
                 return None
 
-
     @classmethod
     def __insert_node(cls, prev_node, down_node, node):
         next_node = prev_node.next
@@ -206,8 +205,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-

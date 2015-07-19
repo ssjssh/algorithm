@@ -7,8 +7,8 @@ def partition(li, start, end):
     li_len = end - start + 1
     if li_len < 2:
         raise ValueError("list which lenght is less then 2 do not need to partition")
-    #使用随机元素元素作为分割点并且把随机元素放在列表最后
-    #这样就可以不变动原来的逻辑了
+    # 使用随机元素元素作为分割点并且把随机元素放在列表最后
+    # 这样就可以不变动原来的逻辑了
     key_index = randint(start, end)
     key = li[key_index]
     li[key_index], li[end] = li[end], li[key_index]
@@ -27,7 +27,7 @@ def partition(li, start, end):
 
 
 def selection(li, start, end, kth):
-    #一定会找到一个元素，因此这儿直接返回是对的。
+    # 一定会找到一个元素，因此这儿直接返回是对的。
     if start == end:
         return start
     mid_index = partition(li, start, end)
@@ -55,7 +55,7 @@ def split_even_nth(li, start, end, k, kth_list):
         return kth_list
     if k % 2 is 1:
         return split_odd_nth(li, start, end, k, kth_list)
-    middle_index = selection(li, start, end, (end - start - 1) / 2)  #必须要减一，分割的点是中间元素的前一个
+    middle_index = selection(li, start, end, (end - start - 1) / 2)  # 必须要减一，分割的点是中间元素的前一个
     print "start:%s,end:%s,mid_index:%s" % (start, end, middle_index)
     kth_list.append(li[middle_index])
     split_even_nth(li, start, middle_index, k / 2, kth_list)

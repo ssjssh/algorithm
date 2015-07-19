@@ -39,7 +39,7 @@ def find_max_sublist(li):
 def find_max_in_middle(li, middle):
     li_len = len(li)
     left_max_index, right_max_index = 0, middle
-    #这里有一个bug，如果列表里面所有的数据都是负的，那么就找不到最小值了
+    # 这里有一个bug，如果列表里面所有的数据都是负的，那么就找不到最小值了
     left_max_sum, cur_sum, right_max_sum = li[middle - 1], 0, li[middle]
     for x in reversed(xrange(0, middle)):
         cur_sum += li[x]
@@ -52,7 +52,7 @@ def find_max_in_middle(li, middle):
         if cur_sum > right_max_sum:
             right_max_sum = cur_sum
             right_max_index = x
-    #这里并没有判断一端结果为负的情况，因为这个时候可以在其中一端的列表中得到最大子数列
+    # 这里并没有判断一端结果为负的情况，因为这个时候可以在其中一端的列表中得到最大子数列
     return (left_max_index, right_max_index, right_max_sum + left_max_sum)
 
 

@@ -20,13 +20,13 @@ class MultiArrayLinkedList(object):
         self.__lenght = 0
         self.__key = [self.__empty for x in xrange(0, length + 1)]
         self.__prev = [-1 for x in xrange(0, length + 1)]
-        self.__next = [x + 1 for x in xrange(0, length + 1)]  #next数组在节点为空的时候存储的是下一个空节点的位置
-        self.__free = 1  #第一个空元素位置
-        #设置哨兵元素
+        self.__next = [x + 1 for x in xrange(0, length + 1)]  # next数组在节点为空的时候存储的是下一个空节点的位置
+        self.__free = 1  # 第一个空元素位置
+        # 设置哨兵元素
         self.__key[0] = self.__empty
         self.__prev[0] = 0
         self.__next[0] = 0
-        self.__full = 0  #第一个元素位置
+        self.__full = 0  # 第一个元素位置
 
     def prepend(self, value):
         first_node = self.__next[0]
@@ -41,16 +41,16 @@ class MultiArrayLinkedList(object):
 
     def append(self, value):
         last_node = self.__prev[0]
-        #创建新节点
+        # 创建新节点
         self.__key[self.__free] = value
         self.__prev[self.__free] = last_node
         next_free = self.__next[self.__free]
         self.__next[self.__free] = 0
-        #设置上一个节点
+        # 设置上一个节点
         self.__next[last_node] = self.__free
-        #设置起始节点
+        # 设置起始节点
         self.__prev[0] = self.__free
-        #设置空链表
+        # 设置空链表
         self.__free = next_free
         self.__full = self.__next[0]
 

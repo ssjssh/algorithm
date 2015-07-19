@@ -3,6 +3,7 @@
 __author__ = 'shenshijun'
 import copy
 
+
 class Queue(object):
     """
     使用Python的list快速实现一个队列
