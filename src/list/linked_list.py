@@ -19,13 +19,13 @@ class LinkedList(object):
             self.next = next
 
         def __str__(self):
-            return "".join([str(self.key), "-->"])
+            return str(self.key)
 
     def __init__(self, *arg):
         super(LinkedList, self).__init__()
-        self.__nil = LinkedList.Node(None, None, None)
-        self.__nil.prev = self.__nil
-        self.__nil.next = self.__nil
+        self.__dump = LinkedList.Node(None, None, None)
+        self.__dump.prev = self.__dump
+        self.__dump.next = self.__dump
         self.__length = 0
         for key in arg:
             self.append(key)
@@ -34,7 +34,7 @@ class LinkedList(object):
         if index > self.__length:
             raise IndexError("can not insert beyond the list")
         cur_pos = 0
-        cur_node = self.__nil
+        cur_node = self.__dump
         while cur_pos < index:
             cur_node = cur_node.next
             cur_pos += 1
@@ -46,39 +46,39 @@ class LinkedList(object):
         return node
 
     def append(self, value):
-        last_node = self.__nil.prev
-        node = LinkedList.Node(value, last_node, self.__nil)
+        last_node = self.__dump.prev
+        node = LinkedList.Node(value, last_node, self.__dump)
         # 现在结尾的节点指向新加的结尾点
         last_node.next = node
-        self.__nil.prev = node
+        self.__dump.prev = node
         self.__length += 1
         # 处理空链表的情况
-        if self.__nil.next is self.__nil:
-            self.__nil.next = node
+        if self.__dump.next is self.__dump:
+            self.__dump.next = node
         return node
 
     def prepend(self, value):
-        node = LinkedList.Node(value, self.__nil, self.__nil.next)
-        self.__nil.next = node
-        self.__nil.next.prev = node
+        node = LinkedList.Node(value, self.__dump, self.__dump.next)
+        self.__dump.next = node
+        self.__dump.next.prev = node
         # 处理空链表的情况
-        if self.__nil.prev is self.__nil:
-            self.__nil.prev = node
+        if self.__dump.prev is self.__dump:
+            self.__dump.prev = node
         self.__length += 1
         return node
 
     def search(self, value):
-        cur_node = self.__nil.next
-        while cur_node is not self.__nil and cur_node.key != value:
+        cur_node = self.__dump.next
+        while cur_node is not self.__dump and cur_node.key != value:
             cur_node = cur_node.next
         return cur_node.key
 
     def delete(self, value):
-        cur_node = self.__nil.next
-        while cur_node is not self.__nil and cur_node.key != value:
+        cur_node = self.__dump.next
+        while cur_node is not self.__dump and cur_node.key != value:
             cur_node = cur_node.next
         # 如果不是空链表，那么就是查找到了相应的元素
-        if cur_node is not self.__nil:
+        if cur_node is not self.__dump:
             cur_node.prev.next = cur_node.next
             cur_node.next.prev = cur_node.prev
 
@@ -88,12 +88,12 @@ class LinkedList(object):
         return self.__length
 
     def __str__(self):
-        cur_node = self.__nil.next
+        cur_node = self.__dump.next
         li = []
-        while cur_node is not self.__nil:
+        while cur_node is not self.__dump:
             li.append(str(cur_node))
             cur_node = cur_node.next
-        return "".join(li)
+        return '[' + ", ".join(li) + ']'
 
 
 def main():
