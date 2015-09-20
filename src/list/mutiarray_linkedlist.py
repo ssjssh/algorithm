@@ -17,7 +17,7 @@ class MultiArrayLinkedList(object):
         super(MultiArrayLinkedList, self).__init__()
         self.__empty = self.EmptyNode()
         self.__cap = length
-        self.__lenght = 0
+        self.__length = 0
         self.__key = [self.__empty for x in xrange(0, length + 1)]
         self.__prev = [-1 for x in xrange(0, length + 1)]
         self.__next = [x + 1 for x in xrange(0, length + 1)]  # next数组在节点为空的时候存储的是下一个空节点的位置
