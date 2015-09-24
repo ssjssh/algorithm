@@ -13,17 +13,17 @@
 def find_max_sublist(li):
     li_len = len(li)
     if li_len < 2:
-        return (0, 0, sum(li))
+        return 0, 0, sum(li)
     middle = li_len / 2
     m_x, m_y, m_sum = find_max_in_middle(li, middle)
     l_x, l_y, l_sum = find_max_sublist(li[:middle])
     r_x, r_y, r_sum = find_max_sublist(li[middle + 1:])
     if m_sum >= l_sum and m_sum >= r_sum:
-        return (m_x, m_y, m_sum)
+        return m_x, m_y, m_sum
     elif l_sum >= m_sum and l_sum >= r_sum:
-        return (l_x, l_y, l_sum)
+        return l_x, l_y, l_sum
     else:
-        return (r_x, r_y, r_sum)
+        return r_x, r_y, r_sum
 
 
 """
@@ -53,7 +53,7 @@ def find_max_in_middle(li, middle):
             right_max_sum = cur_sum
             right_max_index = x
     # 这里并没有判断一端结果为负的情况，因为这个时候可以在其中一端的列表中得到最大子数列
-    return (left_max_index, right_max_index, right_max_sum + left_max_sum)
+    return left_max_index, right_max_index, right_max_sum + left_max_sum
 
 
 def main():

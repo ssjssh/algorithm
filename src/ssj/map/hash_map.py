@@ -12,7 +12,7 @@ class HashMap(object):
     # 来自算法导论乘法哈希函数的值,暂时仅支持2**32个元素
     HASH_CONST = 2654435769
     DEFAULT_SIZE_POWER = 3
-    DEFAULT_SIZE = 2 << DEFAULT_SIZE_POWER  # aka16
+    DEFAULT_SIZE = 2 << DEFAULT_SIZE_POWER  # aka8
     DEFAULT_LOAD_FACTOR = 0.75  # 默认装载因子0.75
 
     class Node(object):

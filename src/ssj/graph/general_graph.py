@@ -6,8 +6,8 @@ import sys
 reload(sys)
 sys.setdefaultencoding('UTF-8')
 
-from lib import queue
-from lib.stack import Stack
+from ssj.lib import queue
+from ssj.lib import Stack
 
 __author__ = 'shenshijun'
 

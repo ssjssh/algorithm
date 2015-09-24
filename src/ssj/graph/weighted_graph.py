@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8
-from lib.queue import Queue
+from ssj.lib import Queue
 
 __author__ = 'shenshijun'
 """
