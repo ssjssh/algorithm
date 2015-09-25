@@ -17,6 +17,9 @@ There are two sorted arrays nums1 and nums2 of size m and n respectively. Find t
 比较k/2位置处数字的大小,小的那一部分一定是在k小的数字之内(可以假设法证明),这样剩下的问题就是从剩下的列表中找
 第k/2位数了.等到这个数为1,那么就好计算了.
 
+
+注意：本解答仍然有问题。
+
 """
 
 
@@ -38,6 +41,7 @@ class Solution(object):
         len2 = len(nums2)
 
         if (len1 + len2) % 2 is 0:
+            return (self.__findKth(4, nums1, nums2))
             return (self.__findKth((len1 + len2) / 2 + 1, nums1, nums2) + self.__findKth((len1 + len2) / 2, nums1,
                                                                                          nums2)) / 2.0
         else:
@@ -55,22 +59,21 @@ class Solution(object):
     def __findKth(k, l1, l2):
         l1_start = 0
         l2_start = 0
-        k -= 1
-        while (len(l1) + len(l2) - l1_start - l2_start - 1) >= k:
-            if k is 0:
+        while (len(l1) + len(l2) - l1_start - l2_start) >= k:
+            if k is 1:
                 return min(l1[l1_start], l2[l2_start])
             if len(l1) - l1_start < len(l2) - l2_start:
-                l1_comp_start = l1_start + min(len(l1), k / 2)
-                l2_comp_start = k - min(len(l1), k / 2) + l2_start
+                l1_comp_start = l1_start + min(len(l1) - l1_start, k / 2)
+                l2_comp_start = k - min(len(l1) - l1_start, k / 2) + l2_start - 1
             else:
-                l2_comp_start = min(len(l2), k / 2) + l2_start
-                l1_comp_start = k - min(len(l2), k / 2) + l1_start
+                l2_comp_start = min(len(l2) - l2_start, k / 2) + l2_start
+                l1_comp_start = k - min(len(l2) - l2_start, k / 2) + l1_start - 1
 
             if l1[l1_comp_start] > l2[l2_comp_start]:
-                k -= (l2_comp_start - l2_start)
+                k -= (l2_comp_start - l2_start + 1)
                 l2_start = l2_comp_start + 1
             elif l1[l1_comp_start] < l2[l2_comp_start]:
-                k -= (l1_comp_start - l1_start)
+                k -= (l1_comp_start - l1_start + 1)
                 l1_start = l1_comp_start + 1
             else:
                 return l1[l1_comp_start]
@@ -79,7 +82,7 @@ class Solution(object):
 
 def main():
     print(Solution().findMedianSortedArrays([0, 1, 2, 3, 4], [0, 1, 2]))  # 1
-    print(Solution().findMedianSortedArrays([], [1]))  #
+    # print(Solution().findMedianSortedArrays([], [1]))  #
 
 
 if __name__ == "__main__":
