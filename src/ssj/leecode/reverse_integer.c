@@ -3,60 +3,22 @@
 */
 
 #include <stdio.h>
-#include <string.h>
 #include <limits.h>
+#include <stdlib.h>
 
-
-int intToString(int i,char *arr){
-    int t_len = sprintf(arr,"%d",i);
-    arr[t_len] = '\0';
-    return t_len;
-}
-int willOverflow(char *result,int is_negative){
-    char min_str[40];
-    char max_str[40];
-    int max_len = intToString(INT_MAX,max_str);
-    int min_len = intToString(INT_MIN,min_str);
-    int result_len = strlen(result);
-    if((is_negative&&result_len<min_len) || (!is_negative&&result_len<max_len)){
-       return 0;
-    }
-    return is_negative?(strcmp(min_str,result)<0):(strcmp(max_str,result)<0);
-}
 int reverse(int x) {
-    char *s_char,*tar_c;
-    int result=0;
-    char intStr[40];
-    int is_negative=0;
-    tar_c = intStr;
-    if(x<0){
-        *tar_c = '-';
-        tar_c++;
-        x = -x;
-        is_negative=1;
-    }
-
-    while(x > 0){
-        *tar_c = x%10+'0';
-        x /= 10;
-        tar_c++;
-    }
-    *tar_c='\0';
-    if(willOverflow(intStr,is_negative)){
-           return 0;
-    }
-    for(tar_c = intStr;(*tar_c)!='\0';tar_c++){
-        if ((*tar_c)!='-'){
-
-            result *= 10;
-            result += (*tar_c)-'0';
-        }
-    }
-    if(intStr[0]=='-'){
-        result = -result;
-    }
-
-    return result;
+      int res = 0;
+      while (x != 0) {
+          /**
+          * 假设INT_MAX / 10 ＝ m，因为他是一个浮点数，那么假设他在n-1，n之间
+          * 那么也就是abs(res)的最大值是n-1，这个数字是在接下来的计算中可能会越界（依赖于x % 10的值）
+          * 如果abs(res)为n，那么就一定会发生越界
+          */
+          if (abs(res) > INT_MAX / 10 || abs(res) * 10 > INT_MAX - abs(x) % 10) return 0;
+           res = res * 10 + x % 10;
+           x /= 10;
+      }
+      return res;
 }
 
 
