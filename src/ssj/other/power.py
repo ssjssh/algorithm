@@ -13,7 +13,7 @@ def power(x, n):
 
 
 def main():
-    print power(1000, 1)
+    print power(1000, 2)
 
 
 if __name__ == '__main__':

@@ -2,12 +2,11 @@
 # -*- coding:UTF-8
 
 import sys
+from ssj.lib.stack import Stack
 
 reload(sys)
 sys.setdefaultencoding('UTF-8')
 
-from ssj.lib import queue
-from ssj.lib import Stack
 
 __author__ = 'shenshijun'
 

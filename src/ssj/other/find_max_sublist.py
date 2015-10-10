@@ -8,6 +8,12 @@
 3，跨越了左右半部分。这个时候只要从中点开始分别在左右找最大子数组就可以了。
 边界条件是：列表中的元素只有一个的时候
 """
+"""
+复杂度,使用递归树来分析：
+因为二分法，树的高度是lgN。
+每一层树的复杂度是N，因为find_max_in_middle中需要把所有节点都遍历一遍
+所以整体复杂度是O(NlgN)
+"""
 
 
 def find_max_sublist(li):
@@ -57,7 +63,7 @@ def find_max_in_middle(li, middle):
 
 
 def main():
-    print find_max_sublist([0])
+    print find_max_sublist([1, -2, 3, 10, -4, 7, 2, -5])
 
 
 if __name__ == '__main__':

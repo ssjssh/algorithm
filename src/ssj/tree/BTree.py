@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8
-from ssj.lib import Stack
+from ssj.lib.stack import Stack
 
 __author__ = 'shenshijun'
 
