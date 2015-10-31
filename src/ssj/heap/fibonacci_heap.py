@@ -30,17 +30,26 @@ class FibonacciHeap(object):
 
     def insert(self, key):
         self.__size += 1
-        if self.__root is None:
-            self.__root = self.Node(key)
+        return self.__insert_root(self.Node(key))
+
+    def __insert_root(self, node, change_root=True):
+        node.parent = None
+        if not self.__root:
+            self.__root = node
+            self.__root.left = node
+            self.__root.right = node
         else:
-            new_node = self.Node(key, left=self.__root.left, right=self.__root)
-            self.__root.left.right = new_node
-            self.__root.left = new_node
-            if new_node.key < self.__root.key:
-                self.__root = new_node
+            node.left = self.__root.left
+            node.right = self.__root
+            self.__root.left.right = node
+            self.__root.left = node
+
+            if self.__root.key > node.key and change_root:
+                self.__root = node
+        return node
 
     def extract_min(self):
-        if self.__root is None:
+        if not self.__root:
             return None
 
         result = self.__root
@@ -50,23 +59,27 @@ class FibonacciHeap(object):
         child = self.__root.child
         for i in xrange(0, self.__root.degree):
             next_node = child.right
-            self.__root.left.right = child
-            child.left = self.__root.left
-            self.__root.left = child
-            child.right = self.__root
-            child.parent = None
+            self.__remove_self(child)
+            self.__insert_root(child)
             child = next_node
 
         # 移除根节点
-        self.__root.left.right = self.__root.right
-        self.__root.right.left = self.__root.left
+        self.__remove_self(self.__root)
         if self.__root.right is self.__root:
             self.__root = None
         else:
             self.__root = self.__root.right
             self.__extract_consolidating()
 
+        result.left = result
+        result.right = result
+        result.parent = None
         return result.key
+
+    @classmethod
+    def __remove_self(cls, node):
+        node.left.right = node.right
+        node.right.left = node.left
 
     def __extract_consolidating(self):
         # 合并根链表
@@ -100,19 +113,7 @@ class FibonacciHeap(object):
         self.__root = None
 
         for d, node in node_degrees.iteritems():
-            node.parent = None
-            if self.__root is None:
-                self.__root = node
-                self.__root.left = node
-                self.__root.right = node
-            else:
-                node.left = self.__root.left
-                node.right = self.__root
-                self.__root.left.right = node
-                self.__root.left = node
-
-            if self.__root.key > node.key:
-                self.__root = node
+            self.__insert_root(node)
 
     @staticmethod
     def __link_to(src, dest):
@@ -127,7 +128,7 @@ class FibonacciHeap(object):
 
         dest_child = dest.child
         src.parent = dest
-        if dest_child is None:
+        if not dest_child:
             dest.child = src
             src.left = src
             src.right = src
@@ -139,13 +140,39 @@ class FibonacciHeap(object):
         dest.degree += 1
 
     def union(self, other):
-        pass
+        if not self.__root:
+            self.__root = other.__root
+        else:
+            self_left = self.__root.left
+            other_right = other.__root.right
+            self.__root.left = other.__root
+            other.__root.right = self.__root
+            self_left.right = other_right
+            other_right.left = self_left
+            self.__root = self.__root if self.__root.key < other.__root.key else other.__root
+            self.__size += other.__size
+
+        return self
 
     def min(self):
-        return None if self.__root is None else self.__root.key
+        return None if self.__root else self.__root.key
 
     def change_key(self, node, new_key):
-        pass
+        """
+        给node设置一个比其key小的值
+        :param node:
+        :param new_key:
+        :return:
+        """
+        if node.key < new_key:
+            return
+        node.key = new_key
+        parent = node.parent
+        if parent and parent.key > node.key:
+            self.__cut(node)
+            self.__cascade_cut(parent)
+        if self.__root.key > node.key:
+            self.__root = node
 
     def __len__(self):
         return self.__size
@@ -154,14 +181,61 @@ class FibonacciHeap(object):
         self.change_key(node, float('-Inf'))
         self.extract_min()
 
+    def __cut(self, node):
+        parent = node.parent
+        if not parent:
+            return node
+
+        # 处理parent的child指针
+        if node.right is node:
+            parent.child = None
+        else:
+            parent.child = node.right
+        self.__remove_self(node)
+        parent.degree -= 1
+        self.__insert_root(node)
+        node.mark = False
+        return node
+
+    def __cascade_cut(self, node):
+        parent = node.parent
+        # 如果parent为None，说明这个节点在根链表上，因此不需要继续处理
+        if parent:
+            if not node.mark:
+                node.mark = True
+            else:
+                # 如果已经丢失了两个节点，那么要把本节点移到根链表上
+                self.__cut(node)
+                self.__cascade_cut(parent)
+
 
 def main():
+    import random
     test = ['O', 'J', 'S', 'Y', 'C', 'M', 'B', 'R', 'N', 'F', 'L', 'Z', 'U', 'Q', 'A', 'G', 'V', 'E', 'D', 'W', 'I',
             'H', 'T', 'K', 'X', 'P']
-
+    random.shuffle(test)
+    rele = 'Z'
+    test.remove(rele)
     heap = FibonacciHeap(*test)
+    rnode = heap.insert(rele)
+
+    for i in xrange(0, random.randint(1, len(heap))):
+        print(heap.extract_min())
+
+    print("change a node key")
+    heap.change_key(rnode, 0)
+
     for i in xrange(0, len(heap)):
         print(heap.extract_min())
+
+    print("test union")
+    one = [10, 20, 0]
+    other = [15, 5, 30]
+    one_heap = FibonacciHeap(*one)
+    other_heap = FibonacciHeap(*other)
+    one_heap.union(other_heap)
+    for i in xrange(0, len(one_heap)):
+        print(one_heap.extract_min())
 
 
 if __name__ == "__main__":
